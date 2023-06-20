@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <script src="js/jquery-1.8.2.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/16a8bcbdcd.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="js/angular.min.js"></script>
+
+    <script>
+        var module = angular.module("myModule", []);
+        module.controller("myController", function ($scope, $http) {
+
+            $scope.fetchmedlist = function () {
+                var email = document.getElementById("emaillist").value;
+                alert(email);
+
+                $http.get("/fetchmedlistall?email=" + email).then(findfun, function (response) {
+                    alert(JSON.stringify(response.data));
+                    //$scope.jsoncityary=response.data;
+                })
+                function findfun(response) {
+                    alert(JSON.stringify(response.data));
+                    $scope.jsonmedary = response.data;
+                }
+            }
+
+            $scope.doDelete = function (index) {
+            alert();
+            var email = document.getElementById("emaillist").value;
+            alert(email+"  "+index);
+            if (confirm("Are you sure?") == false)
+                return;
+                
+            var url = "/medicine-delete?emailidX=" + email;
+
+            $http.get(url).then(fxAnmol, function (response) {
+                alert(response.data);
+            });
+            function fxAnmol(response) {
+                //alert(response.data);
+                $scope.fetchmedlist();
+            }
+        }
+        })
+       
+    </script>
+    <script>
+        $(document).ready(function () {
+            var activeUser = localStorage.getItem("activeUser");
+            $("#emaillist").val(activeUser).prop("readonly", true);
+        })
+    </script>
+    <title>Document</title>
+</head>
+
+<body ng-app="myModule" ng-controller="myController">
+    <nav class="navbar bg-primary btn-primary">
+        <div class="container-fluid" style="background-color: #0d6efd;">
+            <img src="pics/medicinedonationlogo.png" width="45" height="45" class="d-inline-block align-text-top">
+            <center>
+                <h1>List My Medicines</h1>
+            </center>
+            </a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label for="emailid" class="form-label fs-3">Email</label>
+                <input type="text" class="form-control" id="emaillist">
+
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex mt-5 justify-content-center">
+                    <button type="button" class="btn btn-primary btn-lg" ng-click=fetchmedlist();>List
+                        Medicines</button>
+                </div>
+            </div>
+        </div>
+        <!-- card full -->
+        <div class="row mt-5 card" ng-repeat="obj in jsonmedary">
+            <div style="width: 450rem;">
+                <!-- image -->
+                <div class="col-md-2 " style="float: left">
+                    <img src="/uploads/{{obj.pic}}" class="card-img-top" alt="..." width="20" height="100">
+                </div>
+                <!-- name,company -->
+                <div class="col-md-3 ms-3" style="float: left">
+                    <h5 class="card-title">Medicine Name:{{obj.medicine}}</h5>
+                    <p class="card-text">Company:{{obj.company}}</p>
+                </div>
+                <!-- packing,expiry -->
+                <div class="col-md-3 ms-3" style="float: left">
+                    <h5 class="card-title">Quantity:{{obj.qty}}</h5>
+                    <p class="card-text">Packing Type:{{obj.packing}}</p>
+                </div>
+                <!-- delete btn -->
+                <div class="col-md-1 ms-3 mt-4" style="float: left">
+                    <button ng-click="doDelete($index);" style="border:0px;"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--===========================================================  -->
+
+</body>
+
+</html>

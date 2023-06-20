@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+        <script src="js/angular.min.js"></script>
+        <script src="js/jquery-1.8.2.min.js"></script>
+
+        <script>
+            var module=angular.module("myModule",[]);
+            module.controller("myController",function($scope,$http){
+
+                $scope.fetchcities=function()
+                {
+                    $http.get("/fetchcity").then(findfun,function(response){
+                        alert(JSON.stringify(response.data));
+                        //$scope.jsoncityary=response.data;
+                    })
+                    function findfun(response)
+                    {
+                        // alert(JSON.stringify(response.data));
+                        $scope.jsoncityary=response.data;
+                    }
+                }
+
+                $scope.fetchmedicine=function()
+                {
+                    //var city=document.getElementById("citylist").value;
+                    var city=$scope.selCity;
+                    $http.get("/fetchmed?city="+city).then(findmed,function(response){
+                        alert(JSON.stringify(response.data));
+                        })
+                    function findmed(response)
+                    {
+                        $scope.jsonmedary=response.data;
+                    }
+                }
+
+                $scope.fetchdonorcard=function()
+                {
+                    var city=document.getElementById("citylist").value;
+                    var med=document.getElementById("medlist").value;
+                    $http.get("/fetchdonor?city="+city +"&med="+med).then(finddonor,function(response){
+                        alert(JSON.stringify(response.data));
+                        })
+                    function finddonor(response)
+                    {
+                        alert(JSON.stringify(response.data));
+                        $scope.jsondonorcard=response.data;
+                    }
+                }
+
+            })
+        </script>
+</head>
+
+<body ng-app="myModule" ng-controller="myController" ng-init=fetchcities();>
+    <!-- <nav class="navbar bg-primary">
+        <!-- <div>
+            <img src="pics/logo.png" width="20px" alt="">
+        </div> -->
+        <!-- <div class="container-fluid justify-content-center"> -->
+            <!-- <img src="pics/logo.png" width="5%" alt=""> -->
+            <!-- <span class="navbar-brand mb-0 h1" style="font-size: 30px; color: white;">Check Availability of Medicines</span>
+        </div>
+    </nav> -->
+    <nav class="navbar bg-primary btn-primary">
+        <div class="container-fluid" style="background-color: #0d6efd;">
+            <img src="pics/medicinedonationlogo.png" width="45" height="45" class="d-inline-block align-text-top">
+        <center> <h1>SERACH MEDICINE HERE RECIPIENT</h1> </center>
+          </a>
+        </div>
+      </nav>
+
+
+    <div class="d-flex container justify-content-center gap-5">
+        <div class="col-md-3 mt-5">
+            <label for="citylist" class="form-label">City</label>
+            <input class="form-control" list="cityOptions" id="citylist" placeholder="Type to search..." ng-model="selCity" ng-change="fetchmedicine();">
+            <datalist  id="cityOptions">
+                <option ng-repeat="obj in jsoncityary" value="{{obj.city}}">{{obj.city}}</option>
+            </datalist>
+        </div>
+        <div class="col-md-3 mt-5">
+            <label for="medlist" class="form-label">Medicines</label>
+            <input class="form-control" list="medOptions" id="medlist" placeholder="Type to search..." >
+            <datalist  id="medOptions" >
+                <option ng-repeat="obj in jsonmedary" value="{{obj.medicine}}">{{obj.medicine}}</option>
+            </datalist>
+        </div>
+        
+    </div>
+
+    <div class="d-flex mt-5 justify-content-center">
+        <button type="button" class="btn btn-primary btn-lg" ng-click=fetchdonorcard();>Seek Donors</button>
+    </div>
+
+    <div class="container d-flex justify-content-evenly mt-3">
+        <div class="card" style="width: 18rem;"  ng-repeat="obj in jsondonorcard">
+            <center>
+                <img src="uploads/{{obj.pic}}" height="150" class="card-img-top">
+            <div class="card-body">
+              <h2 class="card-title">{{obj.medicine}}</h2>
+              <p class="card-text"> Packing type-{{obj.packing}}  <br> Expiry Date-{{obj.expdate}} <br> Description-{{obj.description}}<br>
+            Quantity-{{obj.qty}}</p>
+              <!-- <input type="button" value="Contact Donor" class="btn btn-primary" ng-click="fetchmodal();"> -->
+              <button type="button" ng-click="fetchdonorcard();" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#donorcontact">
+                Contact Donor</button>
+            </div>
+            </center>
+        </div>
+    </div>
+<!---modal contact donor ==========================================-->
+<div class="modal fade" id="donorcontact"  tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Contact Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" >
+            <!-- <div class="card"  ng-repeat="obj in jsondonorcard">
+                <img src="uploads/{{obj.profilepic}}" alt="vajsdbhcvsjeygfbsj">
+            <h2 class="card-title">{{obj.name}}</h2>
+          <p class="card text">Mobile Number-{{obj.mobile}}  <br>Email-{{obj.emailid}} <br> Address-{{obj.address}}<br>
+            Timings-{{obj.timing}}</p>
+            </div> -->
+            <div class="card"  ng-repeat="obj in jsondonorcard" style="width: 18rem;">
+                <img src="uploads/{{obj.profilepic}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                   <h2 class="card-title">{{obj.name}}</h2>
+          <p class="card text">Mobile Number-{{obj.mobile}}  <br>Email-{{obj.emailid}} <br> Address-{{obj.address}}<br>
+            Timings-{{obj.timing}}</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row-mt-3 mb-3">
+    <div class="col-md-12">
+      <span>
+        <h2 style="background-color:#0d6efd;margin-top: 50px;"> COPYRIGHT RESERVED &#169;</h2>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      A copyright is a type of intellectual property that gives its owner the exclusive right to copy, distribute, adapt, display, and perform a creative work
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

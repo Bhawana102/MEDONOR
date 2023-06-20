@@ -1,0 +1,135 @@
+<html>
+
+<head>
+
+   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+ integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script> 
+        <title>admin-block-users</title>
+    <script src="js/angular.min.js"> </script>
+    <script>
+var moduleKuch=angular.module("myModule",[]);
+moduleKuch.controller("myController",function($scope,$http)
+{
+    $scope.jsonary=[];
+    // $scope.jsonary=[
+    //     {
+    //         "email":"sads@sdvf",
+    //         "utype":"donor",
+    //         "status": "1"
+    //     },
+    //     {
+    //         "email":"sefrgds@sdvf",
+    //         "utype":"donor",
+    //         "status": "1"
+    //     },
+
+    //     {
+    //         "email":"saddsfgs@sdvf",
+    //         "utype":"donor",
+    //         "status": "1"
+    //     }, {
+    //         "email":"sadefgdhs@sdvf",
+    //         "utype":"donor",
+    //         "status": "1"
+    //     }
+
+    // ];
+    $scope.fetchAlldonors=function()
+    {
+        $http.get("/fetchAlldonors").then(fxSuccess,function(response)
+        {
+            alert(JSON.stringify(response.data));
+        });
+        function fxSuccess(response)
+        {
+            // alert(JSON.stringify(resresponsep.data));
+            $scope.jsonary=response.data;
+        }
+    }
+  
+    $scope.doDelete=function(emailid,index)
+            {
+                    //alert(email+"  "+index);
+                   if(confirm("are you sure?")==false)
+                        return;
+
+                   var url="/profile-delete-donor?emailid="+emailid;
+                   $http.get(url).then(fxAnmol,function(response){
+                       // alert(response.data);
+                   });
+                   function fxAnmol(response)
+                   {
+                        //alert(response.data);
+                        $scope.fetchAlldonors();
+                   }
+            }
+
+})
+    </script>
+</head>
+
+<body ng-app="myModule" ng-controller="myController">
+    <nav class="navbar btn-danger">
+        <div class="container-fluid" style="background-color: #0d6efd;">
+            <img src="pics/medicinedonationlogo.png" width="45" height="45" class="d-inline-block align-text-top">
+            <center>
+                <h1>ADMIN-ALL DONORS</h1>
+            </center>
+        </div>
+    </nav>
+    <!-- ========================-------------------======================== -->
+    <div class="container">
+        <div class="row g-12">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary" ng-click="fetchAlldonors();">Fetch All Donors</button>
+            </div>
+        </div>
+        <div class="row g-12">
+            <table class="table">
+                  <tr>
+                    <th scope="col">Sr. No.</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Mobile No.</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Prooftype</th>
+                    <th scope="col">Timings</th>
+                    <th scope="col">Proofpic</th>
+                    <th scope="col">profilepic</th>
+                  
+                    
+                  </tr>
+                
+                  <tr ng-repeat="obj in jsonary">
+                    <td>{{$index}}</td>
+                    <td>{{obj.emailid}}</td>
+                    <td>{{obj.name}}</td>
+                    <td>{{obj.mobile}}</td>
+                    <td>{{obj.address}}</td>
+                    <td>{{obj.city}}</td>
+                    <td>{{obj.prooftype}}</td>
+                    <td>{{obj.timing}}</td>
+                    <td>
+                        <img src="uploads/{{obj.proofpic}}" alt="" width="100" height="100">
+                    </td>
+                    <td>
+                        <img src="uploads/{{obj.profilepic}}" alt="" width="100" height="100">
+                    </td>
+                    <td>
+                        <input type="button" value="Delete" class="btn btn-primary" ng-click=doDelete(obj.emailid,$index);>
+                    </td>
+                   
+                  </tr>
+               
+              </table>
+        </div>
+    </div>
+</body>
+
+</html>

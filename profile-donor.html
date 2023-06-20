@@ -1,0 +1,210 @@
+<html>
+
+<head>
+  <title>Donor Profile</title>
+  <script src="js/jquery-1.8.2.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+
+    <script>
+      function loadproof(ref)
+      {
+        var image=document.getElementById('idprev');
+        image.src= URL.createObjectURL(ref.files[0]);
+
+      }
+      function loadprofilepic(ref2)
+      {
+        var imagepic=document.getElementById('picprev');
+        imagepic.src= URL.createObjectURL(ref2.files[0]);
+
+      }
+    </script>
+    <script>
+      $(document).ready(function(){
+ // alert();
+         var activeUser=localStorage.getItem("activeUser");
+         $("#emailid").val(activeUser).prop("readonly",true);
+        // alert(activeUser);        
+    // gxfchvjbknlm;;===========
+$("#btnSearch").click(function(){
+    
+    
+  var txtemail=$("#emailid").val();
+  
+  var url="/getProfileObject?Email="+txtemail;
+  $.getJSON(url,function(responseKuchJSONAryObject)
+  {
+    if(responseKuchJSONAryObject.length==0)
+    alert("Invalid Id");
+    else
+      {
+        alert(JSON.stringify(responseKuchJSONAryObject));
+      
+     
+      $("#named").val(responseKuchJSONAryObject[0].name);
+      $("#numberd").val(responseKuchJSONAryObject[0].mobile);
+      $("#addrd").val(responseKuchJSONAryObject[0].address);
+      $("#city").val(responseKuchJSONAryObject[0].city);
+      $("#idtype").val(responseKuchJSONAryObject[0].prooftype);
+      $("#time").val(responseKuchJSONAryObject[0].timing);
+      $("#idprev").prop("src","/uploads/"+responseKuchJSONAryObject[0].proofpic);
+      $("#picprev").prop("src","/uploads/"+responseKuchJSONAryObject[0].profilepic);
+      $("#hdn1").val(responseKuchJSONAryObject[0].proofpic);
+      $("#hdn2").val(responseKuchJSONAryObject[0].profilepic);
+        
+      
+     
+     
+    }
+})
+})
+
+
+
+})              //dnsbhcxgijncs MKLx******************************************************************************
+       
+      //   $("#emailprofile").blur(function(){
+      //     var url="/chkEmailKuch?txtEmail="+$("#emailprofile").val();
+      //     $.get(url,function(respKuchStr){
+      //       $("#errEmail").html(respKuchStr);
+      //     });
+
+      //   })
+      // })
+    </script>
+
+</head>
+
+<body>
+  <!-- =====navbar============================================ -->
+  <nav class="navbar btn-danger">
+    <div class="container-fluid" style="background-color: #0d6efd;">
+      <img src="pics/medicinedonationlogo.png" width="45" height="45" class="d-inline-block align-text-top">
+      <center>
+        <h1>DONOR-PROFILE</h1>
+      </center>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===========profile================= -->
+  <form enctype="multipart/form-data" method="post">
+    <input type="hidden" id="hdn1" name="hdn1">
+    <input type="hidden" id="hdn2" name="hdn2">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="emailid" class="form-label">Email</label>
+          <input type="text" class="form-control" id="emailid" name="emailid">
+          <!-- <label  class="form-label" id="errEmail">*</label>  -->
+        </div>
+        <div class="col-md-2">
+          <label for="btnSearch" class="form-label"> &nbsp;</label>
+          <input type="button" class="btn btn-primary form-control" id="btnSearch" name="btnSearch" value="Search">
+        </div>
+
+        <!-- =========================== -->
+
+        <div class="col-md-6">
+          <label for="named" class="form-label">Name</label>
+          <input type="text" name="named" class="form-control"  id="named">
+        </div>
+        <div class="col-md-4">
+          <label for="numberd" class="form-label">Mobile Number</label>
+          <input type="text" class="form-control" name="numberd" id="numberd">
+        </div>
+
+        <!-- =========================== -->
+
+        <div class="col-8">
+          <label for="addrd" class="form-label">Address</label>
+          <input type="text" class="form-control" name="addrd" id="addrd" placeholder="Fill your permanent address">
+        </div>
+        <div class="col-md-4">
+          <label for="city" class="form-label">City</label>
+          <input type="text" class="form-control" id="city" name="city" list="city" />
+          <!--class="form-control"-->
+          <datalist id="city">
+            <option value="Bombay">Bombay</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bathinda">Bathinda</option>
+            <option value="Banaras">Banaras</option>
+            <option value="Varansi">Varansi</option>
+          </datalist>
+        </div>
+
+        <!-- =========================== -->
+
+        <div class="col-md-4">
+          <label for="idtype" class="form-label">Select ID Proof</label>
+          <select class="form-select"id="idtype" name="idtype" aria-label="Default select example">
+            <option >Select ID Proof</option>
+            <option  value="Adhaar">Adhaar Card</option>
+            <option value="Passport">Passport</option>
+            <option value="Drivinglicense">Driving License</option>
+            <option value="ecid">Election Commission ID Card</option>
+          </select>
+        </div>
+        <div class="col-md-5">
+          <label for="time" class="form-label">Contact Timings</label>
+          <input type="text" name="time" class="form-control" id="time" > <br>
+        </div>
+
+        <!-- =========================== -->
+
+        <div class="row mb-4 md-2 ">
+          <div class="col-md-4">
+            <span>Upload ID Proof</span>
+            <input type="file" name="idproof" id="idproof" accept=".jpg, .jpeg, .png" onchange="loadproof(this);" > <br>
+        
+          </div>
+          <div class="col-md-4">
+            <span>Upload Profile Picture</span>
+            <input type="file" name="profilepic" id="profilepic" accept=".jpg, .jpeg, .png" onchange="loadprofilepic(this);" > <br>
+            <!-- <input type="submit" value="submit">  -->
+          </div>
+
+
+          <!-- =========================== -->
+          <div class="row mt-3 ">
+          <div class="col-md-5">
+            <img id="idprev" src="" width="120" height="120">
+          </div>
+          <div class="col-md-5">
+            <img id="picprev" src="" width="120" height="120">
+          </div>
+        </div>
+
+        <!-- =========================== -->
+        <div class="row mt-2">
+          <div class="col-md-4"></div>
+          <div class="col-md-2">
+            <input type="submit" id="btnsave" formaction="/profiledonor" value="Save" class="btn btn-primary form-control">
+
+          </div>
+          <div class="col-md-2">
+            <input type="submit" id="btnupdate" formaction="/profile-donor-update" value="Update" class="btn btn-primary form-control">
+          </div>
+        </div>
+      </div>
+  </form>
+  <div class="row-mt-3 mb-3">
+    <div class="col-md-12">
+      <span>
+        <h2 style="background-color:#0d6efd;margin-top: 50px;"> COPYRIGHT RESERVED &#169;</h2>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      A copyright is a type of intellectual property that gives its owner the exclusive right to copy, distribute, adapt, display, and perform a creative work
+    </div>
+  </div>
+</body>
+
+</html>
